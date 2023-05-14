@@ -1,6 +1,6 @@
 # SAIS
 
-[![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
+Shield: [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 
 SAIS is a surgical AI system that decodes surgical activity based exclusively on surgical videos. This system was first introduced in a 2023 [Nature Biomedical Engineering](https://www.nature.com/articles/s41551-023-01010-8) paper. 
 
