@@ -14,7 +14,7 @@ SAIS has the ability to decode the following elements of surgery:
 
 ## Inference
 
-To demonstrate the utility of SAIS, we have developed an [https://huggingface.co/spaces/danikiyasseh/SAIS/tree/main](interface) that allows users to upload a brief surgical video (on the order of 10-20 seconds) and identify:
+To demonstrate the utility of SAIS, we have developed an [interface](https://huggingface.co/spaces/danikiyasseh/SAIS/tree/main) that allows users to upload a brief surgical video (on the order of 10-20 seconds) and identify:
 - six distinct tissue dissection gestures
 - binary skill level of suturing activity
 
