@@ -1,6 +1,8 @@
 # SAIS
 ## A Vision Transformer for Decoding Surgery from Surgical Videos
 
+[Journal Link](https://www.nature.com/articles/s41551-023-01010-8) | [Cite](#reference) 
+
 ## What is SAIS?
 SAIS is a model that decodes various elements of surgery from surgical videos. We show that SAIS achieves state-of-the-art performance in identifying surgical steps, distinguishing between surgical gestures, and assessing fine-grained surgical skills.
 
@@ -94,4 +96,19 @@ Once you have processed the surgical video, you will notice that the repo now ha
 
 ## License and Terms of Use
 This model and associated code are released under the CC-BY-NC-ND 4.0 license and may only be used for non-commercial, academic research purposes with proper attribution. Any commercial use, sale, or other monetization of the SAIS model and its derivatives, which include models trained on outputs from the SAIS model or datasets created from the SAIS model, is prohibited and requires prior approval. By downloading this model, you agree not to distribute, publish or reproduce a copy of the model. If another user within your organization wishes to use the SAIS model, they must register as an individual user and agree to comply with the terms of use. Users may not attempt to re-identify the deidentified data used to develop the underlying model.
+
+## Reference
+If you find our work useful in your research or if you use parts of this code please consider citing our [paper](https://www.nature.com/articles/s41551-023-01010-8):
+
+Kiyasseh, D., Ma, R., Haque, T.F. et al. A vision transformer for decoding surgeon activity from surgical videos. Nat. Biomed. Eng 7, 780–796 (2023). https://doi.org/10.1038/s41551-023-01010-8
+
+```
+@article{Kiyasseh2023SAIS,
+  title={A vision transformer for decoding surgeon activity from surgical videos},
+  author={Kiyasseh, Dani and Ma, Runzhuo and Haque, Taseen F and Miles, Brian J and Wagner, Christian and Donoho, Daniel and Anandkumar, Anima and Hung, Andrew J},
+  journal={Nature Biomedical Engineering},
+  publisher={Nature Publishing Group},
+  year={2023}
+}
+```
 
