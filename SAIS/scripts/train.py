@@ -14,30 +14,13 @@ import torch.nn as nn
 import copy
 import torch
 import os
-#from tensorboardX import SummaryWriter
-#writer = SummaryWriter()
-
-# def set_bn_training(m):
-#       if isinstance(m, nn.BatchNorm2d):
-#               m.eval()
-
-# def set_bn_training(m):
-#       for i,child in enumerate(m.children()):
-#               if i == 0:
-#                       child.eval()
-#               
-# def stop_tracking(model):
-#       for ii in list(model.children())[0]:
-#               if isinstance(ii,nn.BatchNorm3d):
-#                       ii.track_running_stats = False
-#       return model
 
 def trainModel(rank,world_size,root_path,savepath,dataset_name,data_type,batch_size,nclasses,domain,phases,lr,modalities,freeze_encoder_params,inference,task,balance,balance_groups,single_group,group_info,self_attention,importance_loss,encoder_type,encoder_params,snippetLength,frameSkip,overlap,rep_dim,nepochs,fold,training_fraction):
-        if torch.cuda.is_available():
-            backend = 'nccl'
-        else:
-            backend = 'gloo'
-        dist.init_process_group(backend, rank=rank, world_size=world_size) #"nccl"
+        # if torch.cuda.is_available():
+        #     backend = 'nccl'
+        # else:
+        #     backend = 'gloo'
+        # dist.init_process_group(backend, rank=rank, world_size=world_size) #"nccl"
         
         """ Prototypes Stuff """
         best_params_dict = dict()
@@ -137,5 +120,5 @@ def trainModel(rank,world_size,root_path,savepath,dataset_name,data_type,batch_s
                     elif task == 'ClassificationHead':
                         torch.save(reps_and_labels_dict,os.path.join(savepath,'reps_and_labels_%s' % phases[0]))
                         
-        """ Added New - February 12th - Might Prevent Hanging """
-        dist.destroy_process_group()
+        # """ Added New - February 12th - Might Prevent Hanging """
+        # dist.destroy_process_group()

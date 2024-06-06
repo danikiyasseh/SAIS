@@ -10,6 +10,7 @@ import os
 import argparse
 from train import trainModel
 import torch.multiprocessing as mp
+import time
 
 def runExperiment(rank,world_size,root_path,savepath,dataset_name,data_type,batch_size,nclasses,domain,phases,lr,modalities,freeze_encoder_params,inference,task,balance,balance_groups,single_group,group_info,self_attention,importance_loss,encoder_type,encoder_params,snippetLength,frameSkip,overlap,rep_dim,nepochs,fold,training_fraction):
         trainModel(rank,world_size,root_path,savepath,dataset_name,data_type,batch_size,nclasses,domain,phases,lr,modalities,freeze_encoder_params,inference,task,balance,balance_groups,single_group,group_info,self_attention,importance_loss,encoder_type,encoder_params,snippetLength,frameSkip,overlap,rep_dim,nepochs,fold,training_fraction)
@@ -17,7 +18,7 @@ def runExperiment(rank,world_size,root_path,savepath,dataset_name,data_type,batc
 # %%
 parser = argparse.ArgumentParser()
 parser.add_argument('-p','--path',type=str)
-parser.add_argument('-data','--dataset_name',type=str,choices=['VUA_EASE','VUA_EASE_Stitch','NS_DART','NS_Gestures_Classification','VUA_Gestures_Classification','DVC_UCL_Gestures_Classification','JIGSAWS_Suturing_Gestures_Classification','NS_vs_VUA'])
+parser.add_argument('-data','--dataset_name',type=str,choices=['VUA_EASE','VUA_EASE_Stitch','NS_DART','NS_Gestures_Classification','VUA_Gestures_Classification','DVC_UCL_Gestures_Classification','JIGSAWS_Suturing_Gestures_Classification','NS_vs_VUA','CinVivo_OutView','Custom_Gestures'])
 parser.add_argument('-d','--domain_name',type=str,help='choose domain e.g., VUA')
 parser.add_argument('-m','--model',type=str,default='R3D',help='choose network architecture')
 parser.add_argument('-enc','--encoder_params',type=str,default='ViT_SelfSupervised_ImageNet',help='choose encoder params',choices=['ViT_SelfSupervised_ImageNet','ViT_SelfSupervised_SurgicalVideoNet','ViT_SelfSupervised_USC_NSVideoNet','Kinetics','ViT_SelfSupervised_VUAVideoNet'])
@@ -41,7 +42,7 @@ parser.add_argument('-e','--nepochs',type=int,help='choose number of epochs')
 parser.add_argument('-f','--nfolds',type=int,help='choose number of folds')
 #parser.add_argument('-folds','--folds',nargs='+',type=int,help='choose number of folds')
 parser.add_argument('-i','--inference',default=False,action='store_true')
-parser.add_argument('--local_rank',type=int)
+parser.add_argument('--local_rank',type=int, default=0)
 args = parser.parse_args()
 
 # %%
@@ -78,7 +79,11 @@ print('Self Attention: %s' % str(self_attention))
 print('Balance Groups: %s' % str(balance_groups))
 print('Predict Importance: %s' % str(importance_loss))
 
+def getSavepath(args,fold): # where params are saved
+    return os.path.join(os.path.join(args.path,'params/Fold_%i' % fold))
+
 if __name__ == '__main__':
+    starttime = time.time()
     """ Iterate Over Distinct Experiments """
     for domain in domains:
         print('Domain: %s' % domain)
@@ -89,19 +94,20 @@ if __name__ == '__main__':
             if balance_groups == True: # path for bias mitigation with group balancing strategy
                 group_info = 'None'
                 if importance_loss == True:
-                    savepath = os.path.join(args.path,args.domain_name,'Results',task,domain,encoder_params,'Balance_%s' % str(balance),'BalanceGroups_%s' % str(balance_groups),'PredictImportance_%s' % str(importance_loss),'SelfAttention_%s' % str(self_attention),modalities,'Fold_%i' % fold) #'/mnt/md2/kiyasseh/SurgicalDatasets/NS/Results' #Neurosurgery/SOCAL/Results' #'C:/Users/DaniK/OneDrive/Desktop'
+                    savepath = os.path.join(args.path,args.domain_name,'Results',task,domain,encoder_params,'Balance_%s' % str(balance),'BalanceGroups_%s' % str(balance_groups),'PredictImportance_%s' % str(importance_loss),'SelfAttention_%s' % str(self_attention),modalities,'Fold_%i' % fold)
                 else:
-                    savepath = os.path.join(args.path,args.domain_name,'Results',task,domain,encoder_params,'Balance_%s' % str(balance),'BalanceGroups_%s' % str(balance_groups),'SelfAttention_%s' % str(self_attention),modalities,'Fold_%i' % fold) #'/mnt/md2/kiyasseh/SurgicalDatasets/NS/Results' #Neurosurgery/SOCAL/Results' #'C:/Users/DaniK/OneDrive/Desktop'
+                    savepath = os.path.join(args.path,args.domain_name,'Results',task,domain,encoder_params,'Balance_%s' % str(balance),'BalanceGroups_%s' % str(balance_groups),'SelfAttention_%s' % str(self_attention),modalities,'Fold_%i' % fold) 
             elif single_group == True: # path for bias mitigation with group-specific classifiers
                 group_info = {'group_name':'Prostate Volume Group','group_val':'ProstateLarge60ml'} #'ProstateLarge60ml'
                 group_val = group_info['group_val']
-                savepath = os.path.join(args.path,args.domain_name,'Results',task,domain,encoder_params,'Balance_%s' % str(balance),'SingleGroup_%s' % str(single_group),group_val,'SelfAttention_%s' % str(self_attention),modalities,'Fold_%i' % fold) #'/mnt/md2/kiyasseh/SurgicalDatasets/NS/Results' #Neurosurgery/SOCAL/Results' #'C:/Users/DaniK/OneDrive/Desktop'
+                savepath = os.path.join(args.path,args.domain_name,'Results',task,domain,encoder_params,'Balance_%s' % str(balance),'SingleGroup_%s' % str(single_group),group_val,'SelfAttention_%s' % str(self_attention),modalities,'Fold_%i' % fold) 
             elif importance_loss == True:
                 group_info = 'None'
-                savepath = os.path.join(args.path,args.domain_name,'Results',task,domain,encoder_params,'Balance_%s' % str(balance),'PredictImportance_%s' % str(importance_loss),'SelfAttention_%s' % str(self_attention),modalities,'Fold_%i' % fold) #'/mnt/md2/kiyasseh/SurgicalDatasets/NS/Results' #Neurosurgery/SOCAL/Results' #'C:/Users/DaniK/OneDrive/Desktop'                
+                savepath = os.path.join(args.path,args.domain_name,'Results',task,domain,encoder_params,'Balance_%s' % str(balance),'PredictImportance_%s' % str(importance_loss),'SelfAttention_%s' % str(self_attention),modalities,'Fold_%i' % fold)                
             else: # traditional path
                 group_info = 'None'
-                savepath = os.path.join(args.path,args.domain_name,'Results',task,domain,encoder_params,'Balance_%s' % str(balance),'SelfAttention_%s' % str(self_attention),modalities,'Fold_%i' % fold) #'/mnt/md2/kiyasseh/SurgicalDatasets/NS/Results' #Neurosurgery/SOCAL/Results' #'C:/Users/DaniK/OneDrive/Desktop'
+                savepath = os.path.join(args.path,args.domain_name,'Results',task,domain,encoder_params,'Balance_%s' % str(balance),'SelfAttention_%s' % str(self_attention),modalities,'Fold_%i' % fold)
+            savepath = getSavepath(args,fold)
             print('***** \n Savepath: %s \n *****' % savepath)
             world_size = 1 # more leads to hanging of process after experiment completion (might need to do a cleanup of processes)
             mp.spawn(runExperiment,
@@ -110,3 +116,6 @@ if __name__ == '__main__':
                     join=True)
             #else:
             #    runExperiment(root_path,savepath,dataset_name,data_type,batch_size,nclasses,domain,phases,lr,modalities,freeze_encoder_params,inference,task,balance,self_attention,encoder_type,snippetLength,frameSkip,overlap,rep_dim,nepochs,fold,training_fraction)
+    
+    diff = time.time() - starttime
+    print("Time taken (s): %.3f" % diff)

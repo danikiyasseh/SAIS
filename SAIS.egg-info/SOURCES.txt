@@ -1,0 +1,7 @@
+README.md
+setup.py
+SAIS/__init__.py
+SAIS.egg-info/PKG-INFO
+SAIS.egg-info/SOURCES.txt
+SAIS.egg-info/dependency_links.txt
+SAIS.egg-info/top_level.txt
