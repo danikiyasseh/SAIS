@@ -1,7 +1,10 @@
 # SAIS
 ## A Vision Transformer for Decoding Surgery from Surgical Videos
+<img src=".github/nbme_front_cover.png" width="300px" align="right" />
 
 [Journal Link](https://www.nature.com/articles/s41551-023-01010-8) | [Cite](#reference) 
+
+**Abstract:** The intraoperative activity of a surgeon has substantial impact on postoperative outcomes. However, for most surgical procedures, the details of intraoperative surgical actions, which can vary widely, are not well understood. Here we report a machine learning system leveraging a vision transformer and supervised contrastive learning for the decoding of elements of intraoperative surgical activity from videos commonly collected during robotic surgeries. The system accurately identified surgical steps, actions performed by the surgeon, the quality of these actions and the relative contribution of individual video frames to the decoding of the actions. Through extensive testing on data from three different hospitals located in two different continents, we show that the system generalizes across videos, surgeons, hospitals and surgical procedures, and that it can provide information on surgical gestures and skills from unannotated videos. Decoding intraoperative activity via accurate machine learning systems could be used to provide surgeons with feedback on their operating skills, and may allow for the identification of optimal surgical behaviour and for the study of relationships between intraoperative factors and postoperative outcomes.
 
 ## What is SAIS?
 SAIS is a model that decodes various elements of surgery from surgical videos. We show that SAIS achieves state-of-the-art performance in identifying surgical steps, distinguishing between surgical gestures, and assessing fine-grained surgical skills.
